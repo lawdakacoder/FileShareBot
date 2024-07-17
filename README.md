@@ -1,4 +1,4 @@
-<div align="center"><h1>Contact Bot</h1>
+<div align="center"><h1>File Share Bot</h1>
 <b>An open-source JavaScript Telegram bot that allows you to save your files in a Telegram channel and access or share them without revealing the channel’s identity</b>
 
 <a href="https://t.me/AdasArchiveBot"><b>Demo Bot</b></a>
