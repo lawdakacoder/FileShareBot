@@ -34,7 +34,7 @@
 
   * **CHANNEL_ID**: ID of channel where bot will save user files, this can be obtained by adding [DumpJsonBot](https://t.me/DumpJsonBot) in your channel and by sending `/chat`.
 
-  * **ADMIN_IDS**: List of user ids that can ban and unban users, user id can be obtained by sending /`chat` to [DumpJsonBot](https://t.me/DumpJsonBot).
+  * **ADMIN_IDS**: List of user ids that can ban and unban users, user id can be obtained by sending `/chat` to [DumpJsonBot](https://t.me/DumpJsonBot).
 
 5.Navigate to "Workers & Pages" (drop-down menu) > "KV" > "Create a namespace" and create two namespaces called `users` and `msgs_keys`.
 
@@ -42,7 +42,7 @@
 
 7.Copy your worker's URL and set webhook as given [here](#webhook).
 
-[!TIP]
+>[!TIP]
 > If you’re already using my [ContactBot](https://github.com/lawdakacoder/ContactBot), there’s no need to create a separate `users` namespace. You can simply bind the existing one to your worker. This will ban the user in another bot with same reason automatically.
 
 <a name="deploy-from-source"></a>
