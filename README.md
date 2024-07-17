@@ -63,7 +63,7 @@ cd FileShareBot
 
 4.Fill [config.js](https://github.com/lawdakacoder/FileShareBot/blob/main/src/config.js) file.
 
-5.Create two [KV namespaces](https://developers.cloudflare.com/kv/get-started/#2-create-a-kv-namespace) called `users` and `msgs` and add their ids in [wrangler.toml](https://github.com/lawdakacoder/FileShareBot/blob/main/wrangler.toml) file.
+5.Create two [KV namespaces](https://developers.cloudflare.com/kv/get-started/#2-create-a-kv-namespace) called `users` and `msgs_keys` and add their ids in [wrangler.toml](https://github.com/lawdakacoder/FileShareBot/blob/main/wrangler.toml) file.
 
 6.Setup Wrangler
   * Install wrangler
