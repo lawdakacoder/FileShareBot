@@ -1,4 +1,4 @@
-import { ADMIN_IDS, CHANNEL_ID } from "../config";
+import { config } from "../config";
 import { copyMessage, deleteMessage, sendMessage } from "../telegram/api";
 import { banChat, deleteMessageKey, getMessageKey, unbanChat } from "../utils/database";
 import { isPositiveIntegerString } from "../utils/logic";
@@ -24,7 +24,7 @@ async function startCommand(message, args) {
 async function banCommand(message, args) {
     const { from: user, chat } = message;
 
-    if (!ADMIN_IDS.includes(user.id)) return;
+    if (!config.bot.ADMIN_IDS.includes(user.id)) return;
 
     const chatId = isPositiveIntegerString(args[0]);
 
@@ -43,7 +43,7 @@ async function banCommand(message, args) {
 async function unbanCommand(message, args) {
     const { from: user, chat } = message;
     
-    if (!ADMIN_IDS.includes(user.id)) return;
+    if (!config.bot.ADMIN_IDS.includes(user.id)) return;
 
     const chatId = isPositiveIntegerString(args[0]);
 
@@ -74,7 +74,15 @@ export async function getCommand(message, args) {
         return;
     }
 
-    const storedMessageKey = await getMessageKey(argsArray[0]);
+    const msgInfo = await getMessageKey(argsArray[0]);
+
+    // Support older files
+    let storedMessageKey;
+    if (typeof msgInfo === 'object' && msgInfo !== null) {
+        storedMessageKey = msgInfo.secret;
+    } else {
+        storedMessageKey = msgInfo;
+    }
     
     if (argsArray[1] !== storedMessageKey) {
         await sendMessage(chat.id, Texts.fileIdInvalid, message.message_id);
@@ -83,8 +91,9 @@ export async function getCommand(message, args) {
     
     await copyMessage(
         chat.id,
-        CHANNEL_ID,
+        config.bot.CHANNEL_ID,
         isPositiveIntegerString(argsArray[0]),
+        config.bot.DISABLE_FORWARDS,
         message.message_id
     );
 }
@@ -104,15 +113,21 @@ export async function deleteCommand(message, args) {
         return;
     }
 
-    const storedMessageKey = await getMessageKey(argsArray[0]);
+    // Support older files
+    const msgInfo = await getMessageKey(argsArray[0]);
+    const storedMessageKey = typeof msgInfo === 'object' ? msgInfo.secret : msgInfo;
+    const storedMessageSender = msgInfo.sender;
 
-    if (argsArray[1] !== storedMessageKey) {
+    if (storedMessageSender != chat.id) {
+        await sendMessage(chat.id, Texts.userNotFileOwner, message.message_id);
+        return;
+    } else if (argsArray[1] !== storedMessageKey) {
         await sendMessage(chat.id, Texts.fileIdInvalid, message.message_id);
         return;
     }
 
     await deleteMessageKey(argsArray[0]);
-    await deleteMessage(CHANNEL_ID, isPositiveIntegerString(argsArray[0]));
+    await deleteMessage(config.bot.CHANNEL_ID, isPositiveIntegerString(argsArray[0]));
     await sendMessage(chat.id, Texts.fileIsDeleted, message.message_id);
 }
 

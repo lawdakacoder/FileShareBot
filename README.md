@@ -36,6 +36,8 @@
 
   * **ADMIN_IDS**: List of user ids that can ban and unban users, user id can be obtained by sending `/chat` to [DumpJsonBot](https://t.me/DumpJsonBot).
 
+  * **DISABLE_FORWARDS**: Restrict user from forwarding or copying files provided by bot.
+
 5.Navigate to "Workers & Pages" (drop-down menu) > "KV" > "Create a namespace" and create two namespaces called `users` and `msgs_keys`.
 
 6.Go back to Worker (created in 2nd step) > "Settings" > "Variables" > scroll down to "KV Namespace Bindings" and create two variables `users` and `msgs_keys` and bind them to same namespaces (created in 5th step) > "Deploy".

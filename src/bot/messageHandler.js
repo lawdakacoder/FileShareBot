@@ -1,4 +1,4 @@
-import { ADMIN_IDS, BOT_USERNAME, CHANNEL_ID } from "../config";
+import { config } from "../config";
 import { copyMessage, sendMessage } from "../telegram/api";
 import { banStatus, saveMessageKey } from "../utils/database";
 import { generateUrlSafeToken } from "../utils/misc";
@@ -24,17 +24,18 @@ async function generateResponseMarkup(fileId) {
 }
 
 async function handleFileCopy(message, secretToken) {
-    const { chat } = message;
+    const { from: user, chat } = message;
     const replyMarkup = await generatePostMarkup(chat.id);
     const copiedMessage = await copyMessage(
-        CHANNEL_ID,
+        config.bot.CHANNEL_ID,
         chat.id,
         message.message_id,
+        false,
         null,
         replyMarkup
     );
 
-    await saveMessageKey(copiedMessage.result.message_id, secretToken);
+    await saveMessageKey(copiedMessage.result.message_id, secretToken, user.id);
 
     return copiedMessage.result.message_id;
 }
@@ -52,7 +53,7 @@ async function handleUserFile(message) {
     const secretToken = generateUrlSafeToken(16);
     const copiedMessageId = await handleFileCopy(message, secretToken);
     const fileId = `${copiedMessageId}_${secretToken}`;
-    const fileLink = `https://t.me/${BOT_USERNAME}?start=getFile-${fileId}`;
+    const fileLink = `https://t.me/${config.bot.USERNAME}?start=getFile-${fileId}`;
 
     await sendFileSavedMessage(message.chat.id, message.message_id, fileId, fileLink);
 }
@@ -71,7 +72,7 @@ async function handleBanStatus(chatId, messageId) {
 
 export async function handleMessage(message) {
     const { chat, text } = message;
-    const isOwner = ADMIN_IDS.includes(chat.id);
+    const isOwner = config.bot.ADMIN_IDS.includes(chat.id);
 
     if (text?.startsWith('/')) {
         await handleCommand(message);
@@ -89,7 +90,13 @@ export async function handleMessage(message) {
         }
     }
 
-    if (message.document || message.audio || message.video || message.photo || message.voice) {
+    if (
+        message.document
+        || message.audio
+        || message.video
+        || message.photo
+        || message.voice
+    ) {
         await handleUserFile(message);
     }
 }
