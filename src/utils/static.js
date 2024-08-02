@@ -49,6 +49,7 @@ File Link:
     `,
     invalidArgument: 'The provided argument is invalid.',
     fileIdInvalid: 'The provided file id is invalid.',
+    userNotFileOwner: 'You are not the owner of this file.',
     fileNotFound: 'The file linked with provided file id not found.',
     fileIsDeleted: 'The file has been deleted.',
     queryExecuted: 'The query has been executed.',
