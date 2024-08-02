@@ -1,4 +1,4 @@
-import { SECRET_TOKEN } from "./config";
+import { config } from "./config";
 import { handleMessage } from "./bot/messageHandler";
 import { handleCallbackQuery } from "./bot/callbackHandler";
 
@@ -10,7 +10,7 @@ async function handleRequest(request) {
 
     const secret_token = request.headers.get('X-Telegram-Bot-Api-Secret-Token');
 
-    if (secret_token !== SECRET_TOKEN) {
+    if (secret_token !== config.worker.SECRET_TOKEN) {
         return new Response('Authentication Failed.', { status: 403 });
     }
 
