@@ -1,4 +1,4 @@
-import { API_ROOT, BOT_TOKEN } from "../config";
+import { config } from "../config";
 
 /**
 Send request to Bot API.
@@ -8,7 +8,7 @@ async function sendRequest(
     payload,
     isFormData = false
 ) {
-    const url = `${API_ROOT}/bot${BOT_TOKEN}/${method}`;
+    const url = `${config.telegram.API}/bot${config.bot.TOKEN}/${method}`;
     const options = {
         method: 'POST',
         headers: isFormData ? undefined : { 'Content-Type': 'application/json' },
@@ -69,6 +69,7 @@ export async function copyMessage(
     chatId,
     originChatId,
     messageId,
+    protectContent = false,
     replyToMessageId = null,
     replyMarkup = null
 ) {
@@ -76,6 +77,7 @@ export async function copyMessage(
         chat_id: chatId,
         from_chat_id: originChatId,
         message_id: messageId,
+        protect_content: protectContent,
         parse_mode: 'HTML'
     };
 
