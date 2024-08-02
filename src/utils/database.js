@@ -1,22 +1,30 @@
 /**
-Save message secret key with message id.
+Save message secret key and its sender id with message id.
 **/
-export async function saveMessageKey(messageId, secretKey) {
-    await msgs_keys.put(messageId.toString(), secretKey);
+export async function saveMessageKey(messageId, secretKey, senderId) {
+    const msgJson = {secret: secretKey, sender: senderId};
+    await msgs_keys.put(messageId.toString(), JSON.stringify(msgJson));
 }
 
 /**
-Get message secret key with message id.
+Get message secret key and its sender id with message id.
 **/
 export async function getMessageKey(messageId) {
-    return await msgs_keys.get(messageId);
+    const msgJson = await msgs_keys.get(messageId);
+
+    // Support older files.
+    if (!msgJson?.startsWith('{')) {
+        return msgJson;
+    }
+
+    return JSON.parse(msgJson);
 }
 
 /**
 Delete message secret key with message id.
 **/
 export async function deleteMessageKey(messageId) {
-    await msgs_keys.delete(messageId);
+    await msgs_keys.delete(messageId.toString());
 }
 
 /**
